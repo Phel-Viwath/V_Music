@@ -14,9 +14,9 @@ plugins {
 }
 
 kotlin {
-    androidLibrary {
+    android {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_17)
         }
 
         namespace = "com.v.music.shared"
@@ -39,6 +39,11 @@ kotlin {
     }
     
     sourceSets {
+
+        androidMain.dependencies {
+            implementation(libs.compose.uiToolingPreview)
+            implementation(libs.androidx.activity.compose)
+        }
 
         commonMain.dependencies {
 
@@ -74,11 +79,14 @@ kotlin {
 
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
-
         }
+
         commonTest.dependencies {
             implementation(kotlin("test"))
+            implementation(libs.kotlin.test)
+            implementation(kotlin("test_annotations_common"))
         }
+
     }
 }
 

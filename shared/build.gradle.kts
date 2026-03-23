@@ -1,3 +1,4 @@
+import org.gradle.kotlin.dsl.androidRuntimeClasspath
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 private val isMacOs = System.getProperty("os.name").contains("Mac", ignoreCase = true)
@@ -38,11 +39,7 @@ kotlin {
     }
     
     sourceSets {
-        androidMain.dependencies {
-            implementation(libs.compose.uiToolingPreview)
-            implementation(libs.androidx.activity.compose)
-            implementation(libs.compose.uiTooling)
-        }
+
         commonMain.dependencies {
 
             implementation(libs.compose.runtime)
@@ -77,9 +74,10 @@ kotlin {
 
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
+
         }
         commonTest.dependencies {
-            implementation(libs.kotlin.test)
+            implementation(kotlin("test"))
         }
     }
 }
@@ -96,6 +94,7 @@ configurations.configureEach {
 }
 
 dependencies {
+    androidRuntimeClasspath(libs.compose.uiTooling)
     add("kspAndroid", libs.androidx.room3.compiler)
     if (isMacOs) {
         add("kspIosSimulatorArm64", libs.androidx.room3.compiler)

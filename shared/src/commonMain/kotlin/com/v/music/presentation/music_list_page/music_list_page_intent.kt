@@ -2,39 +2,45 @@ package com.v.music.presentation.music_list_page
 
 import com.v.music.domain.model.Music
 import com.v.music.domain.model.SortOrder
-import kotlinx.coroutines.flow.StateFlow
 
-interface MusicListPageIntent{
-    val state: StateFlow<MusicListState>
+interface MusicListPageIntent {
 
-    fun onHandleInten(intent: Intent)
+    fun onHandleIntent(intent: Intent)
 
     sealed class Intent {
-        data class Order(val sortOrder: SortOrder): Intent()
-        data class SearchTextChange(val searchText: String): Intent()
+        // ── Sorting / Search ──────────────────────────────────────────────
+        data class Order(val sortOrder: SortOrder) : Intent()
+        data class SearchTextChange(val searchText: String) : Intent()
+        data object SearchClick : Intent()
 
-        data object SearchClick: Intent()
+        // ── Load ──────────────────────────────────────────────────────────
+        data object OnLoadMusic : Intent()
+        data object GetOrder : Intent()
 
-        data object OnLoadMusic: Intent()
+        // ── Playback controls ─────────────────────────────────────────────
+        data object OnPlayNext : Intent()
+        data object OnPlayPrevious : Intent()
+        data object OnPause : Intent()
+        data object OnResume : Intent()
+        data object OnRepeatOne : Intent()
+        data object OnRepeatAll : Intent()
 
-        data object GetOrder: Intent()
+        data class ShuffleMode(val isShuffle: Boolean) : Intent()
+        data class OnSeekTo(val position: Long) : Intent()
 
-        data object OnPlayNext: Intent()
-        data object OnPlayPrevious: Intent()
-        data object OnPause: Intent()
-        data object OnResume: Intent()
-        data object OnRepeatOne: Intent()
-        data object OnRepeatAll: Intent()
+        /** Play [music] and (optionally) replace the queue with [musics]. */
+        data class OnPlay(val music: Music, val musics: List<Music> = emptyList()) : Intent()
 
-        data class AddToPlayNext(val music: Music, val musics: List<Music> = emptyList()): Intent()
-        data class AddToPlayLast(val music: Music): Intent()
+        data class AddToPlayNext(val music: Music, val musics: List<Music> = emptyList()) : Intent()
+        data class AddToPlayLast(val music: Music) : Intent()
 
-        data class DeleteMusic(val music: Music): Intent()
-        data object OnDeletePermissionGranted: Intent()
+        // ── Delete ────────────────────────────────────────────────────────
+        data class DeleteMusic(val music: Music) : Intent()
 
-        data class ShuffleMode(val isShuffle: Boolean): Intent()
-        data class OnSeekTo(val position: Long): Intent()
-        data class OnPlay(val music: Music, val musics: List<Music> = emptyList()): Intent()
-
+        /**
+         * Called after the OS permission dialog returns successfully
+         * (Android R+ only). The VM remembers the pending music internally.
+         */
+        data object OnDeletePermissionGranted : Intent()
     }
 }
